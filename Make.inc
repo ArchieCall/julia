@@ -486,7 +486,11 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 # file extensions
 ifeq ($(OS), WINNT)
   SHLIB_EXT := dll
+ifeq ($(USEMSVC),1)
   STATICLIB_EXT := lib
+else
+  STATICLIB_EXT := a
+endif
 else ifeq ($(OS), Darwin)
   SHLIB_EXT := dylib
   STATICLIB_EXT := a
