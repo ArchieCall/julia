@@ -81,7 +81,7 @@ $(LIBFILE): $(OBJS)
 	$(CC) $(CRT_LDFLAGS) $(CRT_CFLAGS) $(LDFLAGS) -shared -o $@ $^
 
 $(SLIBFILE): $(OBJS)
-	ar rs $@ $^
+	$(AR) rs $@ $^
 
 .PHONY: all
 all: $(LIBFILE) $(SLIBFILE)
