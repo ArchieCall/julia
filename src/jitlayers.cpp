@@ -39,6 +39,10 @@
 #include <llvm/Transforms/IPO/AlwaysInliner.h>
 #endif
 
+#if !defined(_OS_WINDOWS_)
+#include <dlfcn.h>
+#endif
+
 namespace llvm {
     extern Pass *createLowerSimdLoopPass();
 }
@@ -312,15 +316,22 @@ void NotifyDebugger(jit_code_entry *JITCodeEntry)
 static uint64_t resolve_compiler_rt(const char *name)
 {
     static void *compiler_rt_hdl = jl_load_dynamic_library_e("libcompiler-rt",
-                                                             JL_RTLD_LOCAL);
+                                                             JL_RTLD_LOCAL | JL_RTLD_LAZY);
     static const char *const prefix = "__";
     if (!compiler_rt_hdl) {
         jl_printf(JL_STDERR, "WARNING: Unable to dlopen compiler-rt\n");
         return 0;
     } else if (strncmp(name, prefix, strlen(prefix)) != 0) {
+        jl_printf(JL_STDERR, "WARNING: %s doesn't match %s\n", name, prefix);
         return 0;
     }
-    return (uintptr_t)jl_dlsym_e(compiler_rt_hdl, name);
+    uint64_t sym = (uintptr_t)jl_dlsym_e(compiler_rt_hdl, name);
+#if defined(_OS_DARWIN_) || defined(_OS_LINUX_)
+    if (!sym) {
+        jl_printf(JL_STDERR, "WARNING: Didn't find symbol in CRT. dlerror %s", dlerror());
+    }
+#endif
+    return sym;
 }
 
 #ifdef _OS_LINUX_
