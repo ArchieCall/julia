@@ -375,7 +375,10 @@ endif
 	$(INSTALL_F) $(BUILDROOT)/src/julia_version.h $(DESTDIR)$(includedir)/julia
 	# Copy julia's copy of compiler-rt
 ifeq ($(OS),WINNT)
+	$(info $(bindir))
+	$(info $(libdir))
 	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(bindir)/
+	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(libdir)/
 else
 	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)
 endif
