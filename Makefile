@@ -238,7 +238,7 @@ $(build_depsbindir)/stringreplace: $(JULIAHOME)/contrib/stringreplace.c | $(buil
 JL_LIBS := julia julia-debug
 
 # private libraries, that are installed in $(prefix)/lib/julia
-JL_PRIVATE_LIBS := ccalltest
+JL_PRIVATE_LIBS := ccalltest compiler-rt
 ifeq ($(USE_GPL_LIBS), 1)
 JL_PRIVATE_LIBS += suitesparse_wrapper
 endif
@@ -323,9 +323,6 @@ else
 $(eval $(call std_dll,gcc_s_seh-1))
 endif
 $(eval $(call std_dll,ssp-0))
-julia-base: | $(build_bindir)/libcompiler-rt.dll
-$(build_bindir)/libcompiler-rt.dll: $(build_private_libdir)/libcompiler-rt.dll | $(build_bindir) julia-deps
-	cp $^ $@
 endif
 define stringreplace
 	$(build_depsbindir)/stringreplace $$(strings -t x - $1 | grep '$2' | awk '{print $$1;}') '$3' 255 "$(call cygpath_w,$1)"
@@ -376,8 +373,6 @@ endif
 endif
 	$(INSTALL_F) $(addprefix $(JULIAHOME)/,src/julia.h src/julia_threads.h src/support/*.h) $(DESTDIR)$(includedir)/julia
 	$(INSTALL_F) $(BUILDROOT)/src/julia_version.h $(DESTDIR)$(includedir)/julia
-	# Copy julia's copy of compiler-rt
-	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)
 	# Copy system image
 	-$(INSTALL_F) $(build_private_libdir)/sys.ji $(DESTDIR)$(private_libdir)
 	$(INSTALL_M) $(build_private_libdir)/sys.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)

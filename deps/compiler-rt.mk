@@ -116,7 +116,7 @@ else
 extract-compiler-rt: $(COMPILER_RT_SRCDIR)/source-extracted
 endif
 
-$(build_private_libdir)/$(COMPILER_RT_LIBFILE): $(COMPILER_RT_BUILDDIR)/$(COMPILER_RT_LIBFILE)
+$(build_shlibdir)/$(COMPILER_RT_LIBFILE): $(COMPILER_RT_BUILDDIR)/$(COMPILER_RT_LIBFILE)
 	mkdir -p $(dir $@)
 	cp $< $@
 	@$(INSTALL_NAME_CMD)$(notdir $@) $@
@@ -135,12 +135,12 @@ configure-compiler-rt: $(COMPILER_RT_BUILDDIR)/build-configured
 clean-compiler-rt:
 	rm -rf $(COMPILER_RT_BUILDDIR)
 	rm -f  $(build_prefix)/manifest/compiler-rt
-	rm -f  $(build_private_libdir)/$(COMPILER_RT_LIBFILE)
+	rm -f  $(build_shlibdir)/$(COMPILER_RT_LIBFILE)
 	rm -f  $(build_private_libdir)/$(COMPILER_RT_STATICLIBFILE)
 distclean-compiler-rt: clean-compiler-rt
 	rm -f $(COMPILER_RT_TAR)
 	rm -rf $(COMPILER_RT_SRCDIR)
 
 compile-compiler-rt: $(COMPILER_RT_BUILDDIR)/$(COMPILER_RT_LIBFILE)
-install-compiler-rt: $(build_private_libdir)/$(COMPILER_RT_LIBFILE) $(build_private_libdir)/$(COMPILER_RT_STATICLIBFILE) $(build_prefix)/manifest/compiler-rt
+install-compiler-rt: $(build_shlibdir)/$(COMPILER_RT_LIBFILE) $(build_private_libdir)/$(COMPILER_RT_STATICLIBFILE) $(build_prefix)/manifest/compiler-rt
 

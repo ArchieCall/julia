@@ -311,12 +311,7 @@ void NotifyDebugger(jit_code_entry *JITCodeEntry)
 // Resolve compiler-rt functions in the shared library that we created from compiler-rt
 static uint64_t resolve_compiler_rt(const char *name)
 {
-#if defined(__APPLE__)
-    static const char *const compiler_rt_lib = "@rpath/julia/libcompiler-rt";
-#else
-    static const char *const compiler_rt_lib = "libcompiler-rt";
-#endif
-    static void *compiler_rt_hdl = jl_load_dynamic_library_e(compiler_rt_lib,
+    static void *compiler_rt_hdl = jl_load_dynamic_library_e("libcompiler-rt",
                                                              JL_RTLD_LOCAL);
     static const char *const prefix = "__";
     if (!compiler_rt_hdl) {
