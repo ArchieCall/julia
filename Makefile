@@ -323,6 +323,9 @@ else
 $(eval $(call std_dll,gcc_s_seh-1))
 endif
 $(eval $(call std_dll,ssp-0))
+julia-deps: | $(build_bindir)/libcompiler-rt.dll
+$(build_bindir)/libcompiler-rt.dll: $(build_private_libdir)/libcompiler-rt.dll | $(build_bindir)
+	cp $^ $@
 endif
 define stringreplace
 	$(build_depsbindir)/stringreplace $$(strings -t x - $1 | grep '$2' | awk '{print $$1;}') '$3' 255 "$(call cygpath_w,$1)"
@@ -337,7 +340,6 @@ install: $(build_depsbindir)/stringreplace $(BUILDROOT)/doc/_build/html
 	$(INSTALL_M) $(build_bindir)/julia* $(DESTDIR)$(bindir)/
 ifeq ($(OS),WINNT)
 	-$(INSTALL_M) $(build_bindir)/*.dll $(DESTDIR)$(bindir)/
-	-$(INSTALL_M) $(build_private_libdir)/ilibcompiler-rt.dll $(DESTDIR)$(bindir)/
 	-$(INSTALL_M) $(build_libdir)/libjulia.dll.a $(DESTDIR)$(libdir)/
 	-$(INSTALL_M) $(build_libdir)/libjulia-debug.dll.a $(DESTDIR)$(libdir)/
 	-$(INSTALL_M) $(build_bindir)/libopenlibm.dll.a $(DESTDIR)$(libdir)/
@@ -375,14 +377,7 @@ endif
 	$(INSTALL_F) $(addprefix $(JULIAHOME)/,src/julia.h src/julia_threads.h src/support/*.h) $(DESTDIR)$(includedir)/julia
 	$(INSTALL_F) $(BUILDROOT)/src/julia_version.h $(DESTDIR)$(includedir)/julia
 	# Copy julia's copy of compiler-rt
-ifeq ($(OS),WINNT)
-	$(info DEBUGINFO: $(bindir))
-	$(info DEBUGINFO: $(libdir))
-	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(bindir)/
-	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(libdir)/
-else
 	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)
-endif
 	# Copy system image
 	-$(INSTALL_F) $(build_private_libdir)/sys.ji $(DESTDIR)$(private_libdir)
 	$(INSTALL_M) $(build_private_libdir)/sys.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)
