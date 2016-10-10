@@ -324,7 +324,7 @@ $(eval $(call std_dll,gcc_s_seh-1))
 endif
 $(eval $(call std_dll,ssp-0))
 julia-base: | $(build_bindir)/libcompiler-rt.dll
-$(build_bindir)/libcompiler-rt.dll: $(build_private_libdir)/libcompiler-rt.dll | $(build_bindir)
+$(build_bindir)/libcompiler-rt.dll: $(build_private_libdir)/libcompiler-rt.dll | $(build_bindir) julia-deps
 	cp $^ $@
 endif
 define stringreplace
