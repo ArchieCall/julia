@@ -374,7 +374,7 @@ endif
 	$(INSTALL_F) $(addprefix $(JULIAHOME)/,src/julia.h src/julia_threads.h src/support/*.h) $(DESTDIR)$(includedir)/julia
 	$(INSTALL_F) $(BUILDROOT)/src/julia_version.h $(DESTDIR)$(includedir)/julia
 	# Copy julia's copy of compiler-rt
-	$(INSTALL_M) $(build_private_libdir)/*compiler-rt.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)
+	$(INSTALL_M) $(build_private_libdir)/libcompiler-rt.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)
 	# Copy system image
 	-$(INSTALL_F) $(build_private_libdir)/sys.ji $(DESTDIR)$(private_libdir)
 	$(INSTALL_M) $(build_private_libdir)/sys.$(SHLIB_EXT) $(DESTDIR)$(private_libdir)
