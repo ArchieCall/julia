@@ -325,7 +325,12 @@ static uint64_t resolve_compiler_rt(const char *name)
         jl_printf(JL_STDERR, "WARNING: %s doesn't match %s\n", name, prefix);
         return 0;
     }
+#if defined(_OS_DARWIN_)
+    // For whatever reason we need to drop the first character on Darwin.
+    uint64_t sym = (uintptr_t)jl_dlsym_e(compiler_rt_hdl, name+1);
+#else
     uint64_t sym = (uintptr_t)jl_dlsym_e(compiler_rt_hdl, name);
+#endif
 #if defined(_OS_DARWIN_) || defined(_OS_LINUX_)
     if (!sym) {
         jl_printf(JL_STDERR, "WARNING: Didn't find symbol in CRT. dlerror %s", dlerror());
